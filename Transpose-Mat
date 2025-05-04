@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MatrixTranspose {
+    function transpose(int[2][3] memory mat) public pure returns (int[3][2] memory result) {
+        for (uint i = 0; i < 2; i++) {
+            for (uint j = 0; j < 3; j++) {
+                result[j][i] = mat[i][j];
+            }
+        }
+    }
+}
