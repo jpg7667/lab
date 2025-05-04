@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract CurrencyNotes {
+    function minNotes(uint amount) public pure returns (uint[6] memory) {
+        uint[6] memory notes; // [100, 50, 10, 5, 2, 1]
+        uint[6] memory denominations = [uint(100), 50, 10, 5, 2, 1];
+        
+        for (uint i = 0; i < denominations.length; i++) {
+            notes[i] = amount / denominations[i];
+            amount = amount % denominations[i];
+        }
+
+        return notes; // Index 0 = Rs.100, ..., Index 5 = Re.1
+    }
+}
