@@ -55,3 +55,36 @@ library MathLibrary {
         return sum == num;
     }
 }
+
+
+//contract 
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "./MathLibrary.sol";
+
+contract MathTester {
+    using MathLibrary for uint;
+
+    function getMax(uint a, uint b) public pure returns (uint) {
+        return MathLibrary.max(a, b);
+    }
+
+    function getMin(uint a, uint b) public pure returns (uint) {
+        return MathLibrary.min(a, b);
+    }
+
+    function getFactorial(uint n) public pure returns (uint) {
+        return MathLibrary.factorial(n);
+    }
+
+    function getFibonacci(uint n) public pure returns (uint[] memory) {
+        return MathLibrary.fibonacci(n);
+    }
+
+    function checkArmstrong(uint num) public pure returns (bool) {
+        return MathLibrary.isArmstrong(num);
+    }
+}
+
