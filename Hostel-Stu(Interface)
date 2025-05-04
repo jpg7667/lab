@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Interface Department
+interface Department {
+    // Attributes
+    string deptName;
+    string deptHead;
+
+    // Abstract methods
+    function printDepartmentDetails() external view;
+}
+
+// Hostel contract
+contract Hostel {
+    string public hostelName;
+    string public hostelLocation;
+    uint256 public numberOfRooms;
+
+    // Constructor to initialize hostel details
+    constructor(string memory _hostelName, string memory _hostelLocation, uint256 _numberOfRooms) {
+        hostelName = _hostelName;
+        hostelLocation = _hostelLocation;
+        numberOfRooms = _numberOfRooms;
+    }
+
+    // Method to get hostel details
+    function getHostelDetails() public view returns (string memory, string memory, uint256) {
+        return (hostelName, hostelLocation, numberOfRooms);
+    }
+
+    // Method to print hostel details
+    function printHostelDetails() public view returns (string memory, string memory, uint256) {
+        return (hostelName, hostelLocation, numberOfRooms);
+    }
+}
+
+// Student contract that inherits Hostel and implements Department interface
+contract Student is Hostel, Department {
+    string public studentName;
+    uint256 public regdNo;
+    string public electiveSubject;
+    uint256 public avgMarks;
+
+    // Constructor to initialize student details
+    constructor(string memory _hostelName, string memory _hostelLocation, uint256 _numberOfRooms, 
+                string memory _studentName, uint256 _regdNo, string memory _electiveSubject, uint256 _avgMarks)
+    Hostel(_hostelName, _hostelLocation, _numberOfRooms) {
+        studentName = _studentName;
+        regdNo = _regdNo;
+        electiveSubject = _electiveSubject;
+        avgMarks = _avgMarks;
+        deptName = "Computer Science"; // Example dept name
+        deptHead = "Dr. Smith"; // Example dept head
+    }
+
+    // Implementing abstract method from Department interface
+    function printDepartmentDetails() external view override returns (string memory, string memory) {
+        return (deptName, deptHead);
+    }
+
+    // Method to get student data
+    function getData() public view returns (string memory, uint256, string memory, uint256) {
+        return (studentName, regdNo, electiveSubject, avgMarks);
+    }
+
+    // Method to print student data
+    function printData() public view returns (string memory, uint256, string memory, uint256) {
+        return (studentName, regdNo, electiveSubject, avgMarks);
+    }
+}
+
+// Driver contract to test Student contract functionality
+contract Driver {
+    mapping(uint256 => Student) public students;
+
+    // Admit new student
+    function admitNewStudent(string memory _hostelName, string memory _hostelLocation, uint256 _numberOfRooms,
+                            string memory _studentName, uint256 _regdNo, string memory _electiveSubject, uint256 _avgMarks) public {
+        Student newStudent = new Student(_hostelName, _hostelLocation, _numberOfRooms, _studentName, _regdNo, _electiveSubject, _avgMarks);
+        students[_regdNo] = newStudent;
+    }
+
+    // Migrate a student (change hostel)
+    function migrateStudent(uint256 _regdNo, string memory _newHostelName, string memory _newHostelLocation, uint256 _newNumberOfRooms) public {
+        Student student = students[_regdNo];
+        student.printHostelDetails();  // Example to check the old hostel details
+        // You can add migration logic here like creating a new hostel for the student
+    }
+
+    // Display details of a student based on regdNo
+    function displayStudentDetails(uint256 _regdNo) public view returns (string memory, uint256, string memory, uint256, string memory, string memory) {
+        Student student = students[_regdNo];
+        (string memory deptName, string memory deptHead) = student.printDepartmentDetails();
+        (string memory studentName, uint256 regdNo, string memory electiveSubject, uint256 avgMarks) = student.getData();
+        return (studentName, regdNo, electiveSubject, avgMarks, deptName, deptHead);
+    }
+}
