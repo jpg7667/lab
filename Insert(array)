@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ArrayInsert {
+    uint[] public arr;
+
+    function insert(uint pos, uint value) public {
+        require(pos <= arr.length, "Invalid position");
+        arr.push(0); // expand array
+        for (uint i = arr.length - 1; i > pos; i--) {
+            arr[i] = arr[i - 1];
+        }
+        arr[pos] = value;
+    }
+
+    function getArray() public view returns (uint[] memory) {
+        return arr;
+    }
+}
