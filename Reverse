@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ReverseSquareCheck {
+    function reverse(uint num) internal pure returns (uint) {
+        uint rev = 0;
+        while (num != 0) {
+            rev = rev * 10 + (num % 10);
+            num /= 10;
+        }
+        return rev;
+    }
+
+    function isReverseSquareMatch(uint num) public pure returns (bool) {
+        uint square = num * num;
+        uint reversed = reverse(num);
+        uint reversedSquare = reversed * reversed;
+        return reverse(square) == reversedSquare;
+    }
+}
