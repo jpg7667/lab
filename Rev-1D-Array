@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ArrayReverse {
+    uint[] public arr;
+
+    function pushElement(uint value) public {
+        arr.push(value);
+    }
+
+    function reverse() public {
+        uint n = arr.length;
+        for (uint i = 0; i < n / 2; i++) {
+            (arr[i], arr[n - 1 - i]) = (arr[n - 1 - i], arr[i]);
+        }
+    }
+
+    function getArray() public view returns (uint[] memory) {
+        return arr;
+    }
+}
