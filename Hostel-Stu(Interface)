@@ -3,12 +3,8 @@ pragma solidity ^0.8.0;
 
 // Interface Department
 interface Department {
-    // Attributes
-    string deptName;
-    string deptHead;
-
-    // Abstract methods
-    function printDepartmentDetails() external view;
+    // Abstract method to print department details
+    function printDepartmentDetails() external view returns (string memory, string memory);
 }
 
 // Hostel contract
@@ -41,11 +37,19 @@ contract Student is Hostel, Department {
     uint256 public regdNo;
     string public electiveSubject;
     uint256 public avgMarks;
+    string public deptName;
+    string public deptHead;
 
     // Constructor to initialize student details
-    constructor(string memory _hostelName, string memory _hostelLocation, uint256 _numberOfRooms, 
-                string memory _studentName, uint256 _regdNo, string memory _electiveSubject, uint256 _avgMarks)
-    Hostel(_hostelName, _hostelLocation, _numberOfRooms) {
+    constructor(
+        string memory _hostelName,
+        string memory _hostelLocation,
+        uint256 _numberOfRooms,
+        string memory _studentName,
+        uint256 _regdNo,
+        string memory _electiveSubject,
+        uint256 _avgMarks
+    ) Hostel(_hostelName, _hostelLocation, _numberOfRooms) {
         studentName = _studentName;
         regdNo = _regdNo;
         electiveSubject = _electiveSubject;
@@ -75,21 +79,47 @@ contract Driver {
     mapping(uint256 => Student) public students;
 
     // Admit new student
-    function admitNewStudent(string memory _hostelName, string memory _hostelLocation, uint256 _numberOfRooms,
-                            string memory _studentName, uint256 _regdNo, string memory _electiveSubject, uint256 _avgMarks) public {
-        Student newStudent = new Student(_hostelName, _hostelLocation, _numberOfRooms, _studentName, _regdNo, _electiveSubject, _avgMarks);
+    function admitNewStudent(
+        string memory _hostelName,
+        string memory _hostelLocation,
+        uint256 _numberOfRooms,
+        string memory _studentName,
+        uint256 _regdNo,
+        string memory _electiveSubject,
+        uint256 _avgMarks
+    ) public {
+        Student newStudent = new Student(
+            _hostelName,
+            _hostelLocation,
+            _numberOfRooms,
+            _studentName,
+            _regdNo,
+            _electiveSubject,
+            _avgMarks
+        );
         students[_regdNo] = newStudent;
     }
 
     // Migrate a student (change hostel)
-    function migrateStudent(uint256 _regdNo, string memory _newHostelName, string memory _newHostelLocation, uint256 _newNumberOfRooms) public {
+    function migrateStudent(uint256 _regdNo) public view {
         Student student = students[_regdNo];
-        student.printHostelDetails();  // Example to check the old hostel details
-        // You can add migration logic here like creating a new hostel for the student
+        student.printHostelDetails(); // Example to check the old hostel details
+        // Additional logic can be added here
     }
 
     // Display details of a student based on regdNo
-    function displayStudentDetails(uint256 _regdNo) public view returns (string memory, uint256, string memory, uint256, string memory, string memory) {
+    function displayStudentDetails(uint256 _regdNo)
+        public
+        view
+        returns (
+            string memory,
+            uint256,
+            string memory,
+            uint256,
+            string memory,
+            string memory
+        )
+    {
         Student student = students[_regdNo];
         (string memory deptName, string memory deptHead) = student.printDepartmentDetails();
         (string memory studentName, uint256 regdNo, string memory electiveSubject, uint256 avgMarks) = student.getData();
