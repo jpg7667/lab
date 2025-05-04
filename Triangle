@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract TriangleCheck {
+    function triangleTypeAndArea(uint a, uint b, uint c) public pure returns (string memory triangleType, uint area100x) {
+        if (a + b > c && b + c > a && c + a > b) {
+            // Triangle type
+            if (a == b && b == c) triangleType = "Equilateral";
+            else if (a == b || b == c || c == a) triangleType = "Isosceles";
+            else triangleType = "Scalene";
+
+            if (a*a + b*b == c*c || b*b + c*c == a*a || c*c + a*a == b*b) {
+                triangleType = string(abi.encodePacked(triangleType, " & Right-Angled"));
+            }
+
+            // Area using Heron's Formula (multiplied by 100 to avoid decimals)
+            uint s = (a + b + c) / 2;
+            uint area = s * (s - a) * (s - b) * (s - c);
+            area100x = sqrt(area) * 100;
+        } else {
+            triangleType = "Not a Triangle";
+            area100x = 0;
+        }
+    }
+
+    function sqrt(uint x) internal pure returns (uint y) {
+        y = x;
+        uint z = (x + 1) / 2;
+        while (z < y) {
+            y = z;
+            z = (x / z + z) / 2;
+        }
+    }
+}
