@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract VowelChecker {
+    function checkCharacter(bytes1 ch) public pure returns (string memory) {
+        ch = toLower(ch);
+        if (ch == "a" || ch == "e" || ch == "i" || ch == "o" || ch == "u") {
+            return "Vowel";
+        } else {
+            return "Consonant";
+        }
+    }
+
+    function toLower(bytes1 _b) internal pure returns (bytes1) {
+        if (_b >= 0x41 && _b <= 0x5A) {
+            return bytes1(uint8(_b) + 32);
+        }
+        return _b;
+    }
+}
