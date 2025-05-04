@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Interface College
+interface College {
+    string public collegeName;
+    uint256 public collegeCode;
+
+    function display() external view returns (string memory, uint256);
+}
+
+// Department contract
+contract Department {
+    string public deptName;
+    string public deptHead;
+
+    // Function to accept department details
+    function setDepartmentDetails(string memory _deptName, string memory _deptHead) public {
+        deptName = _deptName;
+        deptHead = _deptHead;
+    }
+
+    // Function to display department details
+    function displayDepartmentDetails() public view returns (string memory, string memory) {
+        return (deptName, deptHead);
+    }
+}
+
+// Student contract implementing College interface and inheriting Department contract
+contract Student is Department, College {
+    string public studentName;
+    uint256 public regNo;
+    uint256 public marks;
+
+    // Constructor to initialize student details
+    constructor(string memory _collegeName, uint256 _collegeCode, string memory _studentName, uint256 _regNo, uint256 _marks) {
+        collegeName = _collegeName;
+        collegeCode = _collegeCode;
+        studentName = _studentName;
+        regNo = _regNo;
+        marks = _marks;
+    }
+
+    // Implementing display function from College interface
+    function display() external view override returns (string memory, uint256) {
+        return (collegeName, collegeCode);
+    }
+
+    // Function to print the report card of the student
+    function printReportCard() public view returns (string memory, uint256, uint256) {
+        return (studentName, regNo, marks);
+    }
+}
