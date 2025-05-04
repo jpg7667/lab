@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Lottery {
+    function checkPrize(uint[] memory numbers) public pure returns (string memory winner) {
+        for (uint i = 0; i < numbers.length; i++) {
+            if (numbers[i] % 3 == 0 && numbers[i] % 5 == 0) {
+                return "First Prize";
+            } else if (numbers[i] % 7 == 0 || numbers[i] % 11 == 0) {
+                return "Second Prize";
+            } else if (numbers[i] % 5 == 0 && numbers[i] % 10 != 0) {
+                return "Third Prize";
+            }
+        }
+        return "No Prize";
+    }
+}
