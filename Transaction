@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract TransactionLogger {
+    // Declare the owner of the contract
+    address public owner;
+
+    // Mapping to store balances of users
+    mapping(address => uint256) public balances;
+
+    // Events as required in the assignment
+    event DepositMade(address indexed user, uint256 amount, uint256 timestamp);
+    event WithdrawalMade(address indexed user, uint256 amount, uint256 timestamp);
+    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner, uint256 timestamp);
+    event LowBalanceWarning(address indexed user, uint256 balance);
+
+    // Constructor to set the initial owner of the contract
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Modifier to restrict access to the owner
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You are not the owner");
+        _;
+    }
+
+    // Deposit function to allow users to send ETH
+    function deposit() external payable {
+        // Update the user's balance
+        balances[msg.sender] += msg.value;
+
+        // Emit the DepositMade event
+        emit DepositMade(msg.sender, msg.value, block.timestamp);
+    }
+
+    // Withdraw function to allow users to withdraw ETH
+    function withdraw(uint256 amount) external {
+        require(balances[msg.sender] >= amount, "Insufficient balance"); // Check if user has enough balance
+        balances[msg.sender] -= amount; // Deduct the withdrawn amount from the balance
+
+        // Emit the WithdrawalMade event
+        emit WithdrawalMade(msg.sender, amount, block.timestamp);
+
+        // Check if user's balance goes below 0.1 ETH
+        if (balances[msg.sender] < 0.1 ether) {
+            emit LowBalanceWarning(msg.sender, balances[msg.sender]);
+        }
+
+        // Transfer the ETH to the user
+        payable(msg.sender).transfer(amount);
+    }
+
+    // Transfer ownership function
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != owner, "New owner is the same as current owner"); // Prevent self-ownership transfer
+        address oldOwner = owner;
+        owner = newOwner;
+
+        // Emit the OwnershipTransferred event
+        emit OwnershipTransferred(oldOwner, newOwner, block.timestamp);
+    }
+
+    // Function to check the contract's balance (for testing purposes)
+    function contractBalance() external view returns (uint256) {
+        return address(this).balance;
+    }
+}
