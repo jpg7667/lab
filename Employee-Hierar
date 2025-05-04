@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Employee {
+    string public name;
+    string public jobTitle;
+    address public employeeAddress;
+    uint public salary;
+
+    constructor(string memory _name, string memory _jobTitle, uint _salary) {
+        name = _name;
+        jobTitle = _jobTitle;
+        salary = _salary;
+        employeeAddress = msg.sender;
+    }
+
+    function calculateBonus() public view virtual returns (uint) {
+        return salary / 10; // 10% bonus
+    }
+
+    function performanceReport() public view virtual returns (string memory) {
+        return string(abi.encodePacked("Employee ", name, " is performing well."));
+    }
+
+    function manageProject(string memory projectName) public view virtual returns (string memory) {
+        return string(abi.encodePacked(jobTitle, " is managing project: ", projectName));
+    }
+}
+
+contract Manager is Employee {
+    constructor(string memory _name, uint _salary) Employee(_name, "Manager", _salary) {}
+
+    function calculateBonus() public view override returns (uint) {
+        return salary / 5; // 20% bonus
+    }
+}
+
+contract Developer is Employee {
+    constructor(string memory _name, uint _salary) Employee(_name, "Developer", _salary) {}
+}
+
+contract Programmer is Employee {
+    constructor(string memory _name, uint _salary) Employee(_name, "Programmer", _salary) {}
+
+    function performanceReport() public view override returns (string memory) {
+        return string(abi.encodePacked(name, " writes clean and efficient code."));
+    }
+}
