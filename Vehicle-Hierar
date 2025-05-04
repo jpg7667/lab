@@ -1,0 +1,64 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Vehicle {
+    string public make;
+    string public model;
+    uint public year;
+    string public fuelType;
+
+    constructor(string memory _make, string memory _model, uint _year, string memory _fuelType) {
+        make = _make;
+        model = _model;
+        year = _year;
+        fuelType = _fuelType;
+    }
+
+    function fuelEfficiency() public pure virtual returns (uint) {
+        return 0;
+    }
+
+    function distanceTraveled(uint time, uint speed) public pure returns (uint) {
+        return time * speed;
+    }
+
+    function maxSpeed() public pure virtual returns (uint) {
+        return 0;
+    }
+}
+
+contract Truck is Vehicle {
+    constructor() Vehicle("Tata", "X-Heavy", 2020, "Diesel") {}
+
+    function fuelEfficiency() public pure override returns (uint) {
+        return 5;
+    }
+
+    function maxSpeed() public pure override returns (uint) {
+        return 120;
+    }
+}
+
+contract Car is Vehicle {
+    constructor() Vehicle("Honda", "City", 2022, "Petrol") {}
+
+    function fuelEfficiency() public pure override returns (uint) {
+        return 15;
+    }
+
+    function maxSpeed() public pure override returns (uint) {
+        return 180;
+    }
+}
+
+contract Motorcycle is Vehicle {
+    constructor() Vehicle("Bajaj", "Pulsar", 2023, "Petrol") {}
+
+    function fuelEfficiency() public pure override returns (uint) {
+        return 45;
+    }
+
+    function maxSpeed() public pure override returns (uint) {
+        return 160;
+    }
+}
