@@ -1,0 +1,9 @@
+1.// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract TemperatureConverter {
+    function celsiusToFahrenheit(int celsius) public pure returns (int) {
+        int fahrenheit = (celsius * 9 / 5) + 32;
+        return fahrenheit;
+    }
+}
