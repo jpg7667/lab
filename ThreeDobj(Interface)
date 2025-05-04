@@ -50,17 +50,21 @@ contract Cylinder is ThreeDObject {
     uint256 public radius;
     uint256 public height;
 
+    uint256 constant PI = 3141592653589793; // Pi scaled by 10^15 for integer precision
+
     constructor(uint256 _radius, uint256 _height) {
         radius = _radius;
         height = _height;
     }
 
     function surfaceArea() public view override returns (uint256) {
-        return 2 * 3.1415 * radius * (radius + height);
+        // PI scaled by 10^15
+        uint256 radiusPlusHeight = radius + height;
+        return (2 * PI * radius * radiusPlusHeight) / 1000000000000000; // Divide to scale back after calculations
     }
 
     function volume() public view override returns (uint256) {
-        return 3.1415 * radius * radius * height;
+        return (PI * radius * radius * height) / 1000000000000000; // Divide to scale back after calculations
     }
 }
 
@@ -69,21 +73,33 @@ contract Cone is ThreeDObject {
     uint256 public radius;
     uint256 public height;
 
+    uint256 constant PI = 3141592653589793; // Pi scaled by 10^15 for integer precision
+
     constructor(uint256 _radius, uint256 _height) {
         radius = _radius;
         height = _height;
     }
 
     function surfaceArea() public view override returns (uint256) {
-        return 3.1415 * radius * (radius + sqrt(height * height + radius * radius));
+        // PI scaled by 10^15
+        uint256 radiusSquaredPlusHeightSquared = radius * radius + height * height;
+        uint256 slantHeight = sqrt(radiusSquaredPlusHeightSquared);
+        return (PI * radius * (radius + slantHeight)) / 1000000000000000; // Divide to scale back after calculations
     }
 
     function volume() public view override returns (uint256) {
-        return (1 / 3) * 3.1415 * radius * radius * height;
+        return (PI * radius * radius * height) / 3000000000000000; // Divide to scale back after calculations
     }
 
+    // Approximate square root function for Solidity (not perfect)
     function sqrt(uint256 x) internal pure returns (uint256) {
-        return x * x; // Approximation for simplicity
+        uint256 z = (x + 1) / 2;
+        uint256 y = x;
+        while (z < y) {
+            y = z;
+            z = (x / z + z) / 2;
+        }
+        return y;
     }
 }
 
@@ -97,6 +113,8 @@ contract MainContract {
 
         uint256 boxSurfaceArea = box.surfaceArea();
         uint256 cubeVolume = cube.volume();
+        uint256 cylinderSurfaceArea = cylinder.surfaceArea();
+        uint256 coneVolume = cone.volume();
 
         return (boxSurfaceArea, cubeVolume);
     }
