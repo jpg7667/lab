@@ -1,97 +1,114 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Abstract contract ThreeDObject
+// Abstract contract for 3D objects
 abstract contract ThreeDObject {
+    // Abstract functions for surface area and volume
     function surfaceArea() public view virtual returns (uint256);
     function volume() public view virtual returns (uint256);
 }
 
-// Box contract inheriting ThreeDObject
+// Box contract
 contract Box is ThreeDObject {
-    uint256 public length;
-    uint256 public width;
-    uint256 public height;
+    uint256 width;
+    uint256 height;
+    uint256 depth;
 
-    constructor(uint256 _length, uint256 _width, uint256 _height) {
-        length = _length;
+    // Constructor to initialize dimensions of the box
+    constructor(uint256 _width, uint256 _height, uint256 _depth) {
         width = _width;
         height = _height;
+        depth = _depth;
     }
 
+    // Override surface area function for box
     function surfaceArea() public view override returns (uint256) {
-        return 2 * (length * width + width * height + height * length);
+        return 2 * (width * height + height * depth + depth * width);
     }
 
+    // Override volume function for box
     function volume() public view override returns (uint256) {
-        return length * width * height;
+        return width * height * depth;
     }
 }
 
-// Cube contract inheriting ThreeDObject
+// Cube contract
 contract Cube is ThreeDObject {
-    uint256 public side;
+    uint256 side;
 
+    // Constructor to initialize side length of the cube
     constructor(uint256 _side) {
         side = _side;
     }
 
+    // Override surface area function for cube
     function surfaceArea() public view override returns (uint256) {
-        return 6 * (side * side);
+        return 6 * side * side;
     }
 
+    // Override volume function for cube
     function volume() public view override returns (uint256) {
         return side * side * side;
     }
 }
 
-// Cylinder contract inheriting ThreeDObject
+// Cylinder contract
 contract Cylinder is ThreeDObject {
-    uint256 public radius;
-    uint256 public height;
+    uint256 radius;
+    uint256 height;
 
-    uint256 constant PI = 3141592653589793; // Pi scaled by 10^15 for integer precision
-
+    // Constructor to initialize radius and height of the cylinder
     constructor(uint256 _radius, uint256 _height) {
         radius = _radius;
         height = _height;
     }
 
+    // Override surface area function for cylinder
     function surfaceArea() public view override returns (uint256) {
-        // PI scaled by 10^15
-        uint256 radiusPlusHeight = radius + height;
-        return (2 * PI * radius * radiusPlusHeight) / 1000000000000000; // Divide to scale back after calculations
+        uint256 pi = 31415;  // Pi value as 31415 (3.1415 * 10000 for precision)
+        uint256 factor = 10000;  // Factor to preserve precision (scale factor)
+        uint256 area = (2 * pi * radius * (radius + height)) / factor;
+        return area;
     }
 
+    // Override volume function for cylinder
     function volume() public view override returns (uint256) {
-        return (PI * radius * radius * height) / 1000000000000000; // Divide to scale back after calculations
+        uint256 pi = 31415;  // Pi value as 31415 (3.1415 * 10000 for precision)
+        uint256 factor = 10000;  // Factor to preserve precision (scale factor)
+        uint256 vol = (pi * radius * radius * height) / factor;
+        return vol;
     }
 }
 
-// Cone contract inheriting ThreeDObject
+// Cone contract
 contract Cone is ThreeDObject {
-    uint256 public radius;
-    uint256 public height;
+    uint256 radius;
+    uint256 height;
 
-    uint256 constant PI = 3141592653589793; // Pi scaled by 10^15 for integer precision
-
+    // Constructor to initialize radius and height of the cone
     constructor(uint256 _radius, uint256 _height) {
         radius = _radius;
         height = _height;
     }
 
+    // Override surface area function for cone
     function surfaceArea() public view override returns (uint256) {
-        // PI scaled by 10^15
-        uint256 radiusSquaredPlusHeightSquared = radius * radius + height * height;
-        uint256 slantHeight = sqrt(radiusSquaredPlusHeightSquared);
-        return (PI * radius * (radius + slantHeight)) / 1000000000000000; // Divide to scale back after calculations
+        uint256 pi = 31415;  // Pi value as 31415 (3.1415 * 10000 for precision)
+        uint256 factor = 10000;  // Factor to preserve precision (scale factor)
+        uint256 slantHeight = sqrt(radius * radius + height * height);
+        uint256 area = pi * radius * (radius + slantHeight) / factor;
+        return area;
     }
 
+    // Override volume function for cone
     function volume() public view override returns (uint256) {
-        return (PI * radius * radius * height) / 3000000000000000; // Divide to scale back after calculations
+        uint256 pi = 31415;  // Pi value as 31415 (3.1415 * 10000 for precision)
+        uint256 factor = 10000;  // Factor to preserve precision (scale factor)
+        uint256 vol = (pi * radius * radius * height) / (3 * factor);
+        return vol;
     }
 
-    // Approximate square root function for Solidity (not perfect)
+    // Function to calculate square root of a number (used for slant height)
     function sqrt(uint256 x) internal pure returns (uint256) {
         uint256 z = (x + 1) / 2;
         uint256 y = x;
@@ -103,19 +120,3 @@ contract Cone is ThreeDObject {
     }
 }
 
-// Driver contract to test ThreeDObject
-contract MainContract {
-    function printShapeDetails() public view returns (uint256, uint256) {
-        Box box = new Box(3, 4, 5);
-        Cube cube = new Cube(5);
-        Cylinder cylinder = new Cylinder(3, 7);
-        Cone cone = new Cone(3, 7);
-
-        uint256 boxSurfaceArea = box.surfaceArea();
-        uint256 cubeVolume = cube.volume();
-        uint256 cylinderSurfaceArea = cylinder.surfaceArea();
-        uint256 coneVolume = cone.volume();
-
-        return (boxSurfaceArea, cubeVolume);
-    }
-}
