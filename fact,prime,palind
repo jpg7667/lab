@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract NumberUtilities {
+    function factorial(uint n) public pure returns (uint result) {
+        result = 1;
+        for (uint i = 2; i <= n; i++) {
+            result *= i;
+        }
+    }
+
+    function isPrime(uint n) public pure returns (bool) {
+        if (n < 2) return false;
+        for (uint i = 2; i * i <= n; i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+
+    function isPalindrome(uint n) public pure returns (bool) {
+        uint reversed = 0;
+        uint original = n;
+        while (n != 0) {
+            reversed = reversed * 10 + (n % 10);
+            n /= 10;
+        }
+        return reversed == original;
+    }
+}
