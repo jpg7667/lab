@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Calculator {
+    function calculate(int a, int b, bytes1 operator) public pure returns (int result) {
+        if (operator == "+") result = a + b;
+        else if (operator == "-") result = a - b;
+        else if (operator == "*") result = a * b;
+        else if (operator == "/") result = a / b;
+        else if (operator == "%") result = a % b;
+        else revert("Invalid operator");
+    }
+}
