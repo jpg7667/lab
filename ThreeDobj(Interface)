@@ -1,0 +1,103 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Abstract contract ThreeDObject
+abstract contract ThreeDObject {
+    function surfaceArea() public view virtual returns (uint256);
+    function volume() public view virtual returns (uint256);
+}
+
+// Box contract inheriting ThreeDObject
+contract Box is ThreeDObject {
+    uint256 public length;
+    uint256 public width;
+    uint256 public height;
+
+    constructor(uint256 _length, uint256 _width, uint256 _height) {
+        length = _length;
+        width = _width;
+        height = _height;
+    }
+
+    function surfaceArea() public view override returns (uint256) {
+        return 2 * (length * width + width * height + height * length);
+    }
+
+    function volume() public view override returns (uint256) {
+        return length * width * height;
+    }
+}
+
+// Cube contract inheriting ThreeDObject
+contract Cube is ThreeDObject {
+    uint256 public side;
+
+    constructor(uint256 _side) {
+        side = _side;
+    }
+
+    function surfaceArea() public view override returns (uint256) {
+        return 6 * (side * side);
+    }
+
+    function volume() public view override returns (uint256) {
+        return side * side * side;
+    }
+}
+
+// Cylinder contract inheriting ThreeDObject
+contract Cylinder is ThreeDObject {
+    uint256 public radius;
+    uint256 public height;
+
+    constructor(uint256 _radius, uint256 _height) {
+        radius = _radius;
+        height = _height;
+    }
+
+    function surfaceArea() public view override returns (uint256) {
+        return 2 * 3.1415 * radius * (radius + height);
+    }
+
+    function volume() public view override returns (uint256) {
+        return 3.1415 * radius * radius * height;
+    }
+}
+
+// Cone contract inheriting ThreeDObject
+contract Cone is ThreeDObject {
+    uint256 public radius;
+    uint256 public height;
+
+    constructor(uint256 _radius, uint256 _height) {
+        radius = _radius;
+        height = _height;
+    }
+
+    function surfaceArea() public view override returns (uint256) {
+        return 3.1415 * radius * (radius + sqrt(height * height + radius * radius));
+    }
+
+    function volume() public view override returns (uint256) {
+        return (1 / 3) * 3.1415 * radius * radius * height;
+    }
+
+    function sqrt(uint256 x) internal pure returns (uint256) {
+        return x * x; // Approximation for simplicity
+    }
+}
+
+// Driver contract to test ThreeDObject
+contract MainContract {
+    function printShapeDetails() public view returns (uint256, uint256) {
+        Box box = new Box(3, 4, 5);
+        Cube cube = new Cube(5);
+        Cylinder cylinder = new Cylinder(3, 7);
+        Cone cone = new Cone(3, 7);
+
+        uint256 boxSurfaceArea = box.surfaceArea();
+        uint256 cubeVolume = cube.volume();
+
+        return (boxSurfaceArea, cubeVolume);
+    }
+}
