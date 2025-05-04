@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract TicketQueue {
+    string[] public customers;
+
+    function issueTickets(string[] memory names) public {
+        delete customers;
+        for (uint i = 0; i < names.length; i++) {
+            customers.push(names[i]);
+        }
+    }
+
+    function getTicket(uint index) public view returns (uint ticketNo, string memory name) {
+        require(index < customers.length, "Invalid ticket number");
+        return (index + 1, customers[index]);
+    }
+}
