@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract CoPrimeCheck {
+    function gcd(uint a, uint b) internal pure returns (uint) {
+        while (b != 0) {
+            uint temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    function isCoPrimeWith(uint[] memory numbers, uint num) public pure returns (bool[] memory results) {
+        results = new bool[](numbers.length);
+        for (uint i = 0; i < numbers.length; i++) {
+            results[i] = (gcd(numbers[i], num) == 1);
+        }
+    }
+}
