@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract QuadraticSolver {
+    function findRoots(int a, int b, int c) public pure returns (string memory nature, int root1, int root2) {
+        int d = b * b - 4 * a * c;
+        if (d > 0) {
+            root1 = (-b + sqrt(uint(d))) / (2 * a);
+            root2 = (-b - sqrt(uint(d))) / (2 * a);
+            nature = "Real and Distinct";
+        } else if (d == 0) {
+            root1 = -b / (2 * a);
+            root2 = root1;
+            nature = "Real and Equal";
+        } else {
+            nature = "Imaginary Roots";
+        }
+    }
+
+    function sqrt(uint x) internal pure returns (int y) {
+        uint z = (x + 1) / 2;
+        y = int(x);
+        while (uint(y) > z) {
+            y = int(z);
+            z = (x / z + z) / 2;
+        }
+    }
+}
